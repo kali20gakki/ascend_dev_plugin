@@ -124,6 +124,9 @@ try {
 async function runInstall({ repoRoot, config, ctx, flags, dryRun, assumeYes, asJson, log }) {
   const detected = detectedHosts(ctx)
   const interactive = isInteractive() && !assumeYes && !dryRun
+  if (!interactive && !assumeYes && !dryRun) {
+    throw new Error('stdin is not a terminal; pass --yes to install unattended or --dry-run to review the plan')
+  }
   const prompter = interactive ? createPrompter() : undefined
 
   try {
@@ -191,7 +194,8 @@ async function runInstall({ repoRoot, config, ctx, flags, dryRun, assumeYes, asJ
     const plan = buildPlan({ config, repoRoot, ctx, targets, scope, method, skillIds: chosenSkills, source: stringFlag(flags, 'source') ?? 'local', link: boolFlag(flags, 'link'), targetDir })
 
     for (const warning of plan.warnings) log.warn(warning)
-    console.log(`\n${formatPlan(plan)}\n`)
+    if (asJson) console.error(`\n${formatPlan(plan)}\n`)
+    else console.log(`\n${formatPlan(plan)}\n`)
 
     if (dryRun) {
       if (asJson) console.log(JSON.stringify({ dryRun: true, plan }, null, 2))
@@ -233,6 +237,9 @@ async function runUninstall({ repoRoot, config, ctx, flags, dryRun, assumeYes, a
   const targets = normalizeTargets(listFlag(flags, 'targets'), ctx, detectedHosts(ctx))
   const scope = stringFlag(flags, 'scope') ?? 'user'
   const interactive = isInteractive() && !assumeYes && !dryRun
+  if (!interactive && !assumeYes && !dryRun) {
+    throw new Error('stdin is not a terminal; pass --yes to uninstall unattended or --dry-run to review')
+  }
   const prompter = interactive ? createPrompter() : undefined
   const results = []
   try {
