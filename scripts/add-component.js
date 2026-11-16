@@ -35,16 +35,16 @@ const dryRun = boolFlag(flags, 'dry-run')
 switch (type) {
   case 'command': {
     const relative = `commands/${name}.md`
-    await writeText(path.join(repoRoot, relative), commandTemplate(name, description))
+    if (!dryRun) await writeText(path.join(repoRoot, relative), commandTemplate(name, description))
     config.components.commands = unique([...config.components.commands, relative])
-    console.log(`created ${relative}`)
+    console.log(`${dryRun ? 'would create' : 'created'} ${relative}`)
     break
   }
   case 'agent': {
     const relative = `agents/${name}.md`
-    await writeText(path.join(repoRoot, relative), agentTemplate(name, description))
+    if (!dryRun) await writeText(path.join(repoRoot, relative), agentTemplate(name, description))
     config.components.agents = unique([...config.components.agents, relative])
-    console.log(`created ${relative}`)
+    console.log(`${dryRun ? 'would create' : 'created'} ${relative}`)
     break
   }
   case 'hook': {
@@ -53,8 +53,8 @@ switch (type) {
     if (existing) {
       console.log(`${relative} already exists; edit it to add events.`)
     } else {
-      await writeText(path.join(repoRoot, relative), `${JSON.stringify({ hooks: {} }, null, 2)}\n`)
-      console.log(`created ${relative} (no events yet; add them before relying on it)`)
+      if (!dryRun) await writeText(path.join(repoRoot, relative), `${JSON.stringify({ hooks: {} }, null, 2)}\n`)
+      console.log(`${dryRun ? 'would create' : 'created'} ${relative} (no events yet; add them before relying on it)`)
     }
     config.components.hooks = relative
     break
@@ -71,20 +71,23 @@ switch (type) {
       args: [],
       description,
     }]
-    console.log(`added mcp server "${name}" with a TODO command; fill it in before committing`)
+    console.log(`${dryRun ? 'would add' : 'added'} mcp server "${name}" with a TODO command; fill it in before committing`)
     break
   }
 }
 
+if (dryRun) {
+  console.log('Dry run: nothing was written.')
+  process.exit(0)
+}
+
 await saveConfig(repoRoot, config)
 
-if (!dryRun) {
-  const sync = spawnSync(process.execPath, [path.join(repoRoot, 'scripts', 'sync-manifests.js')], { cwd: repoRoot, stdio: 'inherit' })
-  const { errors, warnings } = await checkRepository(repoRoot)
-  for (const warning of warnings) console.warn(`warning: ${warning}`)
-  for (const error of errors) console.error(`error: ${error}`)
-  if (sync.status !== 0 || errors.length > 0) process.exit(1)
-}
+const sync = spawnSync(process.execPath, [path.join(repoRoot, 'scripts', 'sync-manifests.js')], { cwd: repoRoot, stdio: 'inherit' })
+const { errors, warnings } = await checkRepository(repoRoot)
+for (const warning of warnings) console.warn(`warning: ${warning}`)
+for (const error of errors) console.error(`error: ${error}`)
+if (sync.status !== 0 || errors.length > 0) process.exit(1)
 
 console.log('')
 console.log('Next steps: fill in the component, run "npm run verify", then review the regenerated manifests.')
