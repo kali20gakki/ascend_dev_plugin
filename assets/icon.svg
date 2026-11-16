@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36" role="img" aria-label="Ascend dev skills">
+  <path d="M18 4.5 30.5 10.75 18 17 5.5 10.75Z" fill="#4F7CAC" fill-opacity="0.35"/>
+  <path d="M18 9.75 30.5 16 18 22.25 5.5 16Z" fill="#4F7CAC" fill-opacity="0.6"/>
+  <rect x="8.75" y="16.75" width="18.5" height="13.5" rx="3.25" fill="#2F4858"/>
+  <path d="M14.25 22.5 16.75 25l-2.5 2.5" fill="none" stroke="#E8F1F2" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M19 27.5h5" fill="none" stroke="#E8F1F2" stroke-width="1.8" stroke-linecap="round"/>
+</svg>

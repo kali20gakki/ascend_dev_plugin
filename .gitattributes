@@ -1,0 +1,11 @@
+# Normalize line endings for every text file in this repository.
+* text=auto eol=lf
+
+# Windows entry points, when added.
+*.cmd text eol=crlf
+*.bat text eol=crlf
+
+# Binary artwork.
+*.png binary
+*.jpg binary
+*.webp binary

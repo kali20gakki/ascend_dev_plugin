@@ -1,0 +1,43 @@
+{
+  "name": "ascend-dev-skills",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Cross-agent plugin bundling Ascend/GitCode skills for Claude Code, Codex, Cursor, and other Agent Plugins hosts.",
+  "license": "MIT",
+  "author": {
+    "name": "kali20gakki",
+    "url": "https://github.com/kali20gakki"
+  },
+  "homepage": "https://github.com/kali20gakki/ascend_dev_plugin",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kali20gakki/ascend_dev_plugin.git"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "bin": {
+    "ascend-dev-skills": "./scripts/install.js"
+  },
+  "scripts": {
+    "install:plugin": "node scripts/install.js",
+    "sync": "node scripts/sync-manifests.js",
+    "check": "node scripts/sync-manifests.js --check",
+    "verify": "node scripts/verify.js",
+    "test": "node --test",
+    "ci": "node scripts/ci.mjs",
+    "add-skill": "node scripts/add-skill.js",
+    "add-component": "node scripts/add-component.js"
+  },
+  "keywords": [
+    "agent-plugins",
+    "claude-code",
+    "codex",
+    "cursor",
+    "ascend",
+    "cann",
+    "gitcode",
+    "skills"
+  ]
+}

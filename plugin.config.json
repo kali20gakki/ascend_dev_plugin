@@ -1,0 +1,176 @@
+{
+  "schemaVersion": 1,
+  "plugin": {
+    "keywords": [
+      "ascend",
+      "cann",
+      "gitcode",
+      "agent-skills",
+      "code-review",
+      "fuzz",
+      "release-notes",
+      "documentation"
+    ],
+    "name": "ascend-dev-skills",
+    "displayName": {
+      "en": "Ascend dev skills",
+      "zh": "昇腾开发技能包"
+    },
+    "version": "0.1.0",
+    "description": {
+      "en": "A portable plugin that bundles Ascend/GitCode developer skills for Claude Code, Codex, Cursor, and other Agent Plugins hosts: scenario-driven fuzzing, GitCode CLI, GitCode PR review, release notes, Ascend interface auditing, and documentation UX review.",
+      "zh": "面向 Claude Code、Codex、Cursor 等 Agent 宿主的通用插件，打包昇腾/GitCode 开发常用技能：场景化 fuzz、GitCode CLI、PR 审查、Release Note、昇腾接口梳理与文档体验审查。"
+    },
+    "author": {
+      "name": "kali20gakki",
+      "url": "https://github.com/kali20gakki"
+    },
+    "homepage": "https://github.com/kali20gakki/ascend_dev_plugin",
+    "repository": "https://github.com/kali20gakki/ascend_dev_plugin",
+    "license": "MIT"
+  },
+  "marketplace": {
+    "name": "ascend-dev",
+    "displayName": {
+      "en": "Ascend dev",
+      "zh": "昇腾开发"
+    },
+    "owner": {
+      "name": "kali20gakki",
+      "url": "https://github.com/kali20gakki"
+    },
+    "description": {
+      "en": "Skills for Ascend/CANN development and GitCode workflows.",
+      "zh": "面向昇腾/CANN 开发与 GitCode 工作流的技能集合。"
+    }
+  },
+  "codex": {
+    "category": "Productivity",
+    "installation": "AVAILABLE",
+    "authentication": "ON_INSTALL",
+    "repoMarketplace": false
+  },
+  "components": {
+    "commands": [],
+    "agents": [],
+    "hooks": null,
+    "mcpServers": []
+  },
+  "skills": [
+    {
+      "branch": "main",
+      "tags": [
+        "testing",
+        "fuzz",
+        "quality"
+      ],
+      "id": "scene-fuzz",
+      "path": "skills/scene-fuzz",
+      "url": "https://github.com/kali20gakki/sence_fuzz.git",
+      "title": {
+        "en": "Scene fuzz",
+        "zh": "场景化白盒 Fuzz"
+      },
+      "description": {
+        "en": "Scenario-driven white-box fuzz testing for a repository or feature: build a usage-context picture first, then design cases, run them for real evidence, and report.",
+        "zh": "对代码仓或特性做场景化白盒自动测试与 fuzz：先建立使用场景画像，再设计用例、真实运行取证并输出报告。"
+      }
+    },
+    {
+      "branch": "main",
+      "tags": [
+        "gitcode",
+        "cli",
+        "workflow"
+      ],
+      "id": "gitcode-cli",
+      "path": "skills/gitcode-cli",
+      "url": "https://github.com/kali20gakki/gitcode_cli_skill.git",
+      "title": {
+        "en": "GitCode CLI",
+        "zh": "GitCode CLI"
+      },
+      "description": {
+        "en": "End-to-end GitCode work from the terminal with the gitcode CLI: repositories, issues, PRs, releases, pipelines, search, and raw API fallback.",
+        "zh": "用 gitcode CLI 在 GitCode 完成端到端研发操作：仓库、Issue、PR、Release、流水线、搜索，以及用 gitcode api 兜底 REST 接口。"
+      }
+    },
+    {
+      "branch": "main",
+      "tags": [
+        "ascend",
+        "cann",
+        "interfaces",
+        "excel"
+      ],
+      "id": "ascend-interface-auditor",
+      "path": "skills/ascend-interface-auditor",
+      "url": "https://github.com/kali20gakki/Ascend-Interface-Auditor.git",
+      "title": {
+        "en": "Ascend interface auditor",
+        "zh": "昇腾接口梳理"
+      },
+      "description": {
+        "en": "Audit northbound (exposed) and southbound (consumed) interfaces of Ascend/CANN repositories and write the fixed-template Excel report.",
+        "zh": "梳理昇腾/Ascend 代码仓的南北向接口，按固定模板输出 Excel。"
+      }
+    },
+    {
+      "branch": "main",
+      "tags": [
+        "gitcode",
+        "review",
+        "pull-request"
+      ],
+      "id": "gitcode-code-reviewer",
+      "path": "skills/gitcode-code-reviewer",
+      "url": "https://github.com/kali20gakki/gitcode-code-reviewer.git",
+      "title": {
+        "en": "GitCode code reviewer",
+        "zh": "GitCode 代码审查"
+      },
+      "description": {
+        "en": "Deep GitCode PR review using PR metadata, diff, call chains, and repository context; can publish inline comments back to the PR.",
+        "zh": "结合 PR metadata、diff 与整个代码仓上下文深入审查 GitCode PR，可发布逐行评论。"
+      }
+    },
+    {
+      "branch": "main",
+      "tags": [
+        "gitcode",
+        "release",
+        "changelog"
+      ],
+      "id": "gitcode-release-note-generator",
+      "path": "skills/gitcode-release-note-generator",
+      "url": "https://github.com/kali20gakki/gitcode-release-note-generator.git",
+      "title": {
+        "en": "GitCode release notes",
+        "zh": "GitCode 发布说明生成"
+      },
+      "description": {
+        "en": "Generate formal release notes from real GitCode repository data: roadmap, PRs, issues, tags, and repository docs.",
+        "zh": "基于 GitCode 仓库真实数据（roadmap、PR、Issue、release/tag 与仓库文档）生成正式风格的 Release Note。"
+      }
+    },
+    {
+      "branch": "main",
+      "tags": [
+        "documentation",
+        "onboarding",
+        "ux"
+      ],
+      "id": "document-ux-review",
+      "path": "skills/document-ux-review",
+      "url": "https://github.com/kali20gakki/document-ux-review.git",
+      "title": {
+        "en": "Document UX review",
+        "zh": "文档体验审查"
+      },
+      "description": {
+        "en": "Follow a repository's README, install guide, or quick start exactly as a first-time user and report where onboarding breaks and which documentation needs work.",
+        "zh": "像第一次接触项目的人一样，真实按仓库的 README、安装文档或 quick start 跑一遍，判断新人能否走通、文档是否可用、卡在哪里。"
+      }
+    }
+  ]
+}

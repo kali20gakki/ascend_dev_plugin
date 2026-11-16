@@ -1,0 +1,24 @@
+[submodule "skills/scene-fuzz"]
+	path = skills/scene-fuzz
+	url = https://github.com/kali20gakki/sence_fuzz.git
+	branch = main
+[submodule "skills/gitcode-cli"]
+	path = skills/gitcode-cli
+	url = https://github.com/kali20gakki/gitcode_cli_skill.git
+	branch = main
+[submodule "skills/ascend-interface-auditor"]
+	path = skills/ascend-interface-auditor
+	url = https://github.com/kali20gakki/Ascend-Interface-Auditor.git
+	branch = main
+[submodule "skills/gitcode-code-reviewer"]
+	path = skills/gitcode-code-reviewer
+	url = https://github.com/kali20gakki/gitcode-code-reviewer.git
+	branch = main
+[submodule "skills/gitcode-release-note-generator"]
+	path = skills/gitcode-release-note-generator
+	url = https://github.com/kali20gakki/gitcode-release-note-generator.git
+	branch = main
+[submodule "skills/document-ux-review"]
+	path = skills/document-ux-review
+	url = https://github.com/kali20gakki/document-ux-review.git
+	branch = main

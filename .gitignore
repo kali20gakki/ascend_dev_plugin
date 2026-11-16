@@ -1,0 +1,15 @@
+# Dependencies and build output
+node_modules/
+dist/
+coverage/
+.tmp/
+*.log
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# Keep skills/ tracked: it is populated by git submodules.
