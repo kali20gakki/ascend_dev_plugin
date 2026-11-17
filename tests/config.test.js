@@ -13,8 +13,10 @@ async function rawConfig() {
 
 test('repository configuration loads with six skills', async () => {
   const config = await loadConfig(repoRoot)
+  const packageJson = JSON.parse(await readFile(path.join(repoRoot, 'package.json'), 'utf8'))
   assert.equal(config.plugin.name, 'ascend-dev-skills')
-  assert.equal(config.plugin.version, '0.1.0')
+  assert.equal(config.plugin.version, packageJson.version)
+  assert.match(config.plugin.version, /^\d+\.\d+\.\d+$/)
   assert.equal(config.marketplace.name, 'ascend-dev')
   assert.equal(config.skills.length, 6)
   assert.deepEqual(config.skills.map(skill => skill.id), [
