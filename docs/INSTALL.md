@@ -48,7 +48,8 @@ npx ascend-dev-skills@latest uninstall --targets claude --remove-marketplace
 > npx -y github:kali20gakki/ascend_dev_plugin
 > ```
 >
-> 维护者发布：`npm publish --registry https://registry.npmjs.org/`。
+> 维护者发布（需先 `npm login --registry https://registry.npmjs.org/`）：
+> `npm publish --registry https://registry.npmjs.org/`。
 
 ## 源码安装（次要方式）
 

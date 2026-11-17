@@ -64,9 +64,10 @@ npx ascend-dev-skills@latest uninstall --targets all --remove-marketplace
 > npx -y github:kali20gakki/ascend_dev_plugin
 > ```
 >
-> Maintainers publish with:
+> Maintainers publish with (log in to npmjs first):
 >
 > ```bash
+> npm login --registry https://registry.npmjs.org/
 > npm publish --registry https://registry.npmjs.org/
 > ```
 

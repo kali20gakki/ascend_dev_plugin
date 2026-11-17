@@ -62,9 +62,10 @@ npx ascend-dev-skills@latest uninstall --targets all --remove-marketplace
 > npx -y github:kali20gakki/ascend_dev_plugin
 > ```
 >
-> 发布命令（维护者）：
+> 发布命令（维护者，需要先登录 npmjs）：
 >
 > ```bash
+> npm login --registry https://registry.npmjs.org/
 > npm publish --registry https://registry.npmjs.org/
 > ```
 
