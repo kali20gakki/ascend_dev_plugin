@@ -84,8 +84,11 @@ enabled = true
 ```
 
 Codex installs from a local path as well: `codex plugin marketplace add ./ascend_dev_plugin`.
-If skills are empty after installing from a Git URL, use a local clone (see
-[docs/INSTALL.md](docs/INSTALL.md#codex)).
+**Codex does not fetch git submodules from a Git marketplace source**, so installing from the
+GitHub URL yields an empty `skills/`. Use a local clone (`git clone --recurse-submodules`, then
+`codex plugin marketplace add ./ascend_dev_plugin`) or `--method skills`; the installer warns
+about this combination and checks the installed skill files
+(see [docs/INSTALL.md](docs/INSTALL.md#codex)).
 
 ### Cursor
 

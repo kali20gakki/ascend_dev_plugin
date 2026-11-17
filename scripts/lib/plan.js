@@ -77,6 +77,9 @@ export function buildPlan(options) {
       if (target === 'codex' && scope === 'project') {
         plan.warnings.push('Codex installs plugins at user level; enable the plugin per project through .codex/config.toml.')
       }
+      if (target === 'codex' && /^(https?:\/\/|git@|ssh:\/\/)/i.test(marketplaceSource)) {
+        plan.warnings.push('Codex does not fetch git submodules from a Git marketplace source, so the installed plugin may have empty skills. Use --source local (this checkout) or --method skills instead.')
+      }
       plan.steps.push(
         {
           kind: 'command', host: target, label: `${host.label}: add marketplace`,

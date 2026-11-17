@@ -1,13 +1,13 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { existsSync } from 'node:fs'
-import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
+import { mkdtemp, readFile, rm, writeFile, mkdir } from 'node:fs/promises'
 import os from 'node:os'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { loadConfig } from '../scripts/lib/config.js'
 import { buildPlan } from '../scripts/lib/plan.js'
-import { executePlan, prepareSubmodules, verifyPlan } from '../scripts/lib/installer.js'
+import { executePlan, missingSkillFiles, prepareSubmodules, verifyPlan } from '../scripts/lib/installer.js'
 import { HOSTS } from '../scripts/lib/hosts.js'
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
@@ -45,6 +45,18 @@ test('copy plan installs skills and verifies them', async () => {
     const second = await executePlan({ repoRoot, plan, dryRun: false, force: false, log: silent })
     assert.equal(second.ok, true)
     assert.ok(second.results.every(result => result.skipped), 'second run should skip unchanged copies')
+  } finally {
+    await rm(root, { recursive: true, force: true })
+  }
+})
+
+test('missingSkillFiles detects empty submodule directories', async () => {
+  const root = await mkdtemp(path.join(os.tmpdir(), 'ascend-missing-'))
+  try {
+    await mkdir(path.join(root, 'skills', 'present'), { recursive: true })
+    await writeFile(path.join(root, 'skills', 'present', 'SKILL.md'), '---\nname: present\ndescription: x\n---\n')
+    await mkdir(path.join(root, 'skills', 'empty'), { recursive: true })
+    assert.deepEqual(missingSkillFiles(root, ['present', 'empty', 'absent']), ['empty', 'absent'])
   } finally {
     await rm(root, { recursive: true, force: true })
   }

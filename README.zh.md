@@ -81,8 +81,11 @@ codex /plugins
 enabled = true
 ```
 
-也支持本地路径：`codex plugin marketplace add ./ascend_dev_plugin`。若从 Git URL 安装后
-技能为空，请改用本地克隆（见 [docs/INSTALL.md](docs/INSTALL.md#codex)）。
+也支持本地路径：`codex plugin marketplace add ./ascend_dev_plugin`。**Codex 从 Git 市场源安装时不会拉取
+git submodule**，因此直接用 GitHub URL 安装会得到空的 `skills/`。请改用本地克隆
+（`git clone --recurse-submodules` 后 `codex plugin marketplace add ./ascend_dev_plugin`）或
+`--method skills`；安装器会对这一组合告警，并在安装后检查技能文件是否落位
+（见 [docs/INSTALL.md](docs/INSTALL.md#codex)）。
 
 ### Cursor
 

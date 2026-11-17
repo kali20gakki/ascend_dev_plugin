@@ -92,14 +92,18 @@ codex /plugins
   enabled = true
   ```
 
-- **Submodules:** Codex snapshots a Git marketplace source. If `skills/` is empty after
-  installing from a Git URL, use a local clone instead:
+- **Submodules (verified):** a Git marketplace source does **not** bring Codex the submodules.
+  `codex plugin marketplace add kali20gakki/ascend_dev_plugin` installs the plugin, but
+  `skills/*` is empty. Use a local clone instead (or let the installer copy the skills):
 
   ```bash
   git clone --recurse-submodules https://github.com/kali20gakki/ascend_dev_plugin.git
   codex plugin marketplace add ./ascend_dev_plugin
   codex plugin add ascend-dev-skills@ascend-dev
   ```
+
+  The installer emits a warning for `--targets codex --source git` and verifies the installed
+  plugin's `skills/<id>/SKILL.md` files after installing.
 
 - The root `plugin.json` follows Agent Plugins 1.0.0; OpenAI-specific presentation lives
   under `extensions.com.openai`. Codex also accepts the legacy

@@ -14,7 +14,7 @@ import { boolFlag, listFlag, parseArgs, stringFlag } from './lib/args.js'
 import { detectedHosts, hostContext, homeDir, localPluginDirFor, skillsDirFor, HOSTS } from './lib/hosts.js'
 import { buildPlan, normalizeTargets, SKILLS_DIR_TARGET } from './lib/plan.js'
 import { createPrompter, isInteractive } from './lib/prompt.js'
-import { collectState, executePlan, formatPlan, prepareSubmodules, verifyPlan } from './lib/installer.js'
+import { collectState, executePlan, formatPlan, prepareSubmodules, verifyInstalledSkillFiles, verifyPlan } from './lib/installer.js'
 import { checkRepository } from './lib/checks.js'
 import { repoRootFrom } from './lib/repo.js'
 import { findCommand } from './lib/hosts.js'
@@ -193,7 +193,6 @@ async function runInstall({ repoRoot, config, ctx, flags, dryRun, assumeYes, asJ
 
     const plan = buildPlan({ config, repoRoot, ctx, targets, scope, method, skillIds: chosenSkills, source: stringFlag(flags, 'source') ?? 'local', link: boolFlag(flags, 'link'), targetDir })
 
-    for (const warning of plan.warnings) log.warn(warning)
     if (asJson) console.error(`\n${formatPlan(plan)}\n`)
     else console.log(`\n${formatPlan(plan)}\n`)
 
@@ -215,6 +214,14 @@ async function runInstall({ repoRoot, config, ctx, flags, dryRun, assumeYes, asJ
     await prepareSubmodules({ repoRoot, plan, config, log, dryRun })
     const execution = await executePlan({ repoRoot, plan, dryRun, force, log })
     const verification = await verifyPlan({ plan, log })
+    const marketplaceHosts = targets.filter(target => plan.steps.some(step =>
+      step.kind === 'command' && step.host === target && step.argv[0] === 'plugin'
+      && (step.argv[1] === 'install' || step.argv[1] === 'add')))
+    if (marketplaceHosts.length > 0) {
+      const installed = await verifyInstalledSkillFiles({ ctx, config, hosts: marketplaceHosts, skillIds: plan.skillIds, log })
+      verification.checks.push(...installed.checks)
+      verification.ok = verification.ok && installed.ok
+    }
 
     for (const note of plan.notes) console.log(`\nnote: ${note}`)
 

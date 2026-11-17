@@ -164,6 +164,55 @@ function mentions(text, name) {
   }
 }
 
+/** Check that the installed plugin copy actually contains the selected skills. */
+export async function verifyInstalledSkillFiles({ ctx, config, hosts, skillIds, log }) {
+  const checks = []
+  const pluginId = `${config.plugin.name}@${config.marketplace.name}`
+  for (const hostId of hosts) {
+    const host = ctx.hosts[hostId]
+    const bin = host?.bin ? findCommand(host.binary) : undefined
+    if (!bin) continue
+    const result = runCommand(bin, ['plugin', 'list', '--json'], { inherit: false })
+    if (!result.ok) {
+      checks.push({ label: `${host.label}: installed skill files`, ok: false, detail: 'plugin list failed' })
+      log?.info(`MISSING ${host.label}: plugin list failed`)
+      continue
+    }
+    let root
+    try {
+      const data = JSON.parse(result.stdout)
+      if (hostId === 'claude') {
+        const list = Array.isArray(data) ? data : data.installed ?? []
+        const entry = list.find(item => item.id === pluginId || item.pluginId === pluginId)
+        root = entry?.installPath
+      } else {
+        const entry = (data.installed ?? []).find(item => item.pluginId === pluginId)
+        root = entry?.source?.path
+      }
+    } catch {
+      root = undefined
+    }
+    if (!root) {
+      checks.push({ label: `${host.label}: installed skill files`, ok: false, detail: 'plugin not found in plugin list' })
+      log?.info(`MISSING ${host.label}: plugin not found in plugin list`)
+      continue
+    }
+    const missing = missingSkillFiles(root, skillIds)
+    checks.push({
+      label: `${host.label}: skill files in ${root}`,
+      ok: missing.length === 0,
+      detail: missing.length > 0 ? `missing ${missing.join(', ')}` : undefined,
+    })
+    log?.info(`${missing.length === 0 ? 'ok' : 'MISSING'} ${host.label}: skill files${missing.length > 0 ? ` (missing ${missing.join(', ')})` : ''}`)
+  }
+  return { ok: checks.every(check => check.ok), checks }
+}
+
+/** Return the selected skill ids whose SKILL.md is absent from a plugin root. */
+export function missingSkillFiles(pluginRoot, skillIds) {
+  return skillIds.filter(id => !existsSync(path.join(pluginRoot, 'skills', id, 'SKILL.md')))
+}
+
 /** Inspect per-host installation state for `doctor`. */
 export function collectState({ ctx, config, repoRoot }) {
   const hosts = Object.values(ctx.hosts).map(host => {
