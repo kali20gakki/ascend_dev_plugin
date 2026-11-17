@@ -1,46 +1,43 @@
-# Compatibility
+# 兼容性
 
-Verified against the tool versions available when the repository was tested; re-run
-`node scripts/install.js doctor` and the host validators after upgrades.
+以下结果基于本仓库测试时的工具版本；升级宿主后请重新运行
+`npx ascend-dev-skills@latest doctor` 与各宿主校验命令。
 
-| Host | Reads | Install path | Verified here |
+| 宿主 | 读取 | 安装路径 | 本仓验证情况 |
 | --- | --- | --- | --- |
-| Claude Code 2.1.237 | `.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json`, `skills/` | `claude plugin marketplace add` + `claude plugin install` | strict validation; install from a local path **and from GitHub** (submodules fetched, 6 skills in the cache) |
-| Codex CLI 0.149.0 | root `plugin.json`, `skills/`, legacy `.claude-plugin/marketplace.json` | `codex plugin marketplace add` + `codex plugin add` | marketplace add/list/add/list in an isolated `CODEX_HOME` from a local path; GitHub source installs the plugin but **not** the submodules |
-| Cursor | root `plugin.json`, `skills/` | copy to `~/.cursor/plugins/local/<name>` or the host's Agent Plugins flow | filesystem layout only; UI not verified |
-| VS Code / GitHub Copilot | root `plugin.json`, `skills/` | host's Agent Plugins flow | not verified |
-| Kiro / Hermes / OpenClaw / Antigravity / Perplexity | root `plugin.json`, `skills/` | host's Agent Plugins flow | not verified |
-| DeepSeek Harness | `skills/` directory | copy/link into `~/.dsh/skills` or project `.dsh/skills` | installer copy path only |
+| Claude Code 2.1.237 | `.claude-plugin/plugin.json`、`.claude-plugin/marketplace.json`、`skills/` | `claude plugin marketplace add` + `claude plugin install` | `--strict` 校验通过；本地路径与 GitHub 源安装均通过（GitHub 源会拉取 submodule，6 个技能进入缓存） |
+| Codex CLI 0.149.0 | 根 `plugin.json`、`skills/`、兼容的 `.claude-plugin/marketplace.json` | `codex plugin marketplace add` + `codex plugin add` | 隔离 `CODEX_HOME` 下本地路径安装通过；GitHub 源可安装插件但 **不拉取 submodule**（技能目录为空） |
+| Cursor | 根 `plugin.json`、`skills/` | 复制到 `~/.cursor/plugins/local/<name>` 或宿主 Agent Plugins 流程 | 仅验证文件落位；UI 未验证 |
+| DeepSeek Harness（DSH） | `skills/` | 复制/链接到 `~/.dsh/skills` 或项目 `.dsh/skills` | 隔离 `DSH_HOME` 下安装/卸载通过；会话实际加载未在隔离环境验证 |
+| VS Code / GitHub Copilot | 根 `plugin.json`、`skills/` | 宿主 Agent Plugins 流程 | 未验证 |
+| Kiro / Hermes / OpenClaw / Antigravity / Perplexity | 根 `plugin.json`、`skills/` | 宿主 Agent Plugins 流程 | 未验证 |
 
-## Component support
+## 组件支持矩阵
 
-| Component | Claude Code | Codex | Cursor | Portable Agent Plugins |
-| --- | --- | --- | --- | --- |
-| Skills (`skills/<id>/SKILL.md`) | yes | yes | yes | yes |
-| Commands | yes | no | Cursor Plugins only | no |
-| Agents | yes | no | Cursor Plugins only | no |
-| Hooks | yes | yes (`extensions.com.openai.hooks`) | Cursor Plugins only | no |
-| MCP servers | yes (`.mcp.json`) | yes (`mcp.json`) | yes (`mcp.json`) | yes |
+| 组件 | Claude Code | Codex | Cursor | 便携 Agent Plugins | DSH |
+| --- | --- | --- | --- | --- | --- |
+| 技能（`skills/<id>/SKILL.md`） | 支持 | 支持 | 支持 | 支持 | 支持 |
+| commands | 支持 | 不支持 | 仅 Cursor Plugins | 不支持 | 不适用 |
+| agents | 支持 | 不支持 | 仅 Cursor Plugins | 不支持 | 不适用 |
+| hooks | 支持 | 支持（`extensions.com.openai.hooks`） | 仅 Cursor Plugins | 不支持 | 不适用 |
+| MCP servers | 支持（`.mcp.json`） | 支持（`mcp.json`） | 支持（`mcp.json`） | 支持 | 不适用 |
 
-This repository currently ships skills only.
+当前仓库仅发布技能。
 
-## Behavior differences worth knowing
+## 需要了解的行为差异
 
-- **Skill namespacing:** Claude Code exposes plugin skills as
-  `ascend-dev-skills:<skill>`; a personal `~/.claude/skills/<skill>` with the same name
-  is a separate skill and can coexist.
-- **Submodule fetching (verified):** Claude Code fetches the plugin's submodules when adding the
-  marketplace from GitHub. Codex 0.149.0 clones a Git marketplace **without** its submodules, so
-  `skills/*` arrive empty; install Codex from a local clone (`--source local`) or use
-  `--method skills`. The installer warns when Codex is combined with a Git source and checks the
-  installed plugin's skill files after every marketplace install.
-- **Marketplace file:** the repository ships the Claude marketplace file only. Codex
-  accepts it as a legacy-compatible marketplace; if a future Codex release stops doing
-  so, set `codex.repoMarketplace: true` in `plugin.config.json` and run `npm run sync` to
-  emit `.agents/plugins/marketplace.json`.
-- **Icons:** Claude Code ignores the `icon` field at load time on older versions (the
-  manifest omits it). Cursor/Codex presentation comes from
-  `extensions.com.openai.interface`, which is optional and never required for loading.
-- **Skill frontmatter extensions:** `whenToUse`, `user-invocable`, and
-  `disable-model-invocation` are portable/host-specific extensions. The repository
-  validates only `name` and `description` and warns about nothing else.
+- **技能命名空间**：Claude Code 以 `ascend-dev-skills:<技能名>` 暴露插件技能；`~/.claude/skills`
+  下的同名个人技能是另一份技能，可以共存。
+- **submodule 拉取（已实测）**：Claude Code 在添加市场时会拉取插件 submodule；Codex 0.149.0
+  克隆 Git 市场源时不拉 submodule，`skills/*` 为空。Codex 请用本地克隆（`--source local`）或
+  `--method skills`。安装器会在 Codex + Git 源组合时告警，并在安装后检查技能文件。
+- **市场文件**：仓库只生成 Claude 市场文件，Codex 将其作为兼容市场读取。若未来 Codex 不再兼容，
+  可在 `plugin.config.json` 设置 `codex.repoMarketplace: true`，执行 `npm run sync` 生成
+  `.agents/plugins/marketplace.json`。
+- **图标**：Claude Code 旧版本加载时忽略 `icon` 字段（当前清单未写该字段）；Cursor/Codex 的展示
+  信息来自 `extensions.com.openai.interface`，可选且不影响加载。
+- **技能 frontmatter 扩展**：`whenToUse`、`user-invocable`、`disable-model-invocation`
+  属于扩展字段；本仓库只强校验 `name` 与 `description`，其余不告警。
+- **在线安装缓存**：npm/npx 安装没有 submodule，安装器会把仓库克隆到
+  `~/.cache/ascend-dev-skills/src`（Windows 为 `%LOCALAPPDATA%\ascend-dev-skills\src`）。删除该
+  目录即可强制下次重新克隆。

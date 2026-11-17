@@ -93,7 +93,7 @@ test('normalizeTargets expands all and rejects unknown targets', async () => {
   assert.deepEqual(normalizeTargets([], ctx, ['claude']), ['claude'])
   assert.deepEqual(normalizeTargets(['all'], ctx, ['claude', 'codex']), ['claude', 'codex'])
   assert.deepEqual(normalizeTargets(['codex', 'claude', 'codex'], ctx, []), ['codex', 'claude'])
-  assert.throws(() => normalizeTargets(['vim'], ctx, []), /unknown target/)
+  assert.throws(() => normalizeTargets(['vim'], ctx, []), /未知目标/)
 })
 
 test('repository config exposes the same host paths the installer uses', async () => {

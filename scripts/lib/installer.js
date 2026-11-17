@@ -49,14 +49,14 @@ export async function executePlan({ repoRoot, plan, dryRun, force, log }) {
         continue
       }
       if (!bin) {
-        log.error(`cannot run ${step.program}: not found on PATH`)
+        log.error(`无法运行 ${step.program}：PATH 中未找到`)
         results.push({ label: step.label, ok: false, detail: `${step.program} not found` })
         continue
       }
       log.step(display)
       const result = runCommand(bin, step.argv, { cwd: step.cwd, inherit: log.inherit })
       if (!result.ok) {
-        log.error(`failed: ${step.label}${result.stderr ? `\n${result.stderr.trim()}` : ''}`)
+        log.error(`失败：${step.label}${result.stderr ? `\n${result.stderr.trim()}` : ''}`)
       }
       results.push({ label: step.label, ok: result.ok, detail: result.stderr?.trim() || undefined })
       continue
@@ -91,20 +91,20 @@ async function copySkillStep(repoRoot, step, { dryRun, force, log }) {
     await mkdir(path.dirname(step.to), { recursive: true })
     const { symlink } = await import('node:fs/promises')
     await symlink(path.resolve(from), step.to, process.platform === 'win32' ? 'junction' : 'dir')
-    log.step(`linked ${step.to}`)
+    log.step(`已链接 ${step.to}`)
     return { label: step.label, ok: true }
   }
   if (existsSync(step.to) && !force) {
     if (await sameSkill(from, step.to)) {
-      log.step(`unchanged ${step.to}`)
+      log.step(`未变化 ${step.to}`)
       return { label: step.label, ok: true, skipped: true }
     }
-    log.warn(`${step.to} already exists with different content; rerun with --force to overwrite`)
+    log.warn(`${step.to} 已存在且内容不同；如需覆盖请加 --force`)
     return { label: step.label, ok: true, skipped: true, detail: 'existing content kept' }
   }
   await removeIfExists(step.to)
   await copyTree(from, step.to)
-  log.step(`copied ${step.to}`)
+  log.step(`已复制 ${step.to}`)
   return { label: step.label, ok: true }
 }
 
@@ -125,7 +125,7 @@ async function copyPluginStep(repoRoot, step, { dryRun, log }) {
     if (!existsSync(source)) continue
     await copyTree(source, path.join(step.to, include))
   }
-  log.step(`copied plugin to ${step.to}`)
+  log.step(`已复制插件到 ${step.to}`)
   return { label: step.label, ok: true }
 }
 
@@ -139,7 +139,7 @@ export async function verifyPlan({ plan, log }) {
     if (check.kind === 'path') {
       const ok = existsSync(check.path)
       checks.push({ label: `${check.host}: ${check.path}`, ok })
-      log.info(`${ok ? 'ok' : 'MISSING'} ${check.path}`)
+      log.info(`${ok ? '通过' : '缺失'} ${check.path}`)
       continue
     }
     const bin = findCommand(check.program)
@@ -151,7 +151,7 @@ export async function verifyPlan({ plan, log }) {
     const text = `${result.stdout}\n${result.stderr}`
     const ok = result.ok && mentions(text, check.expect)
     checks.push({ label: check.label, ok, detail: result.stderr.trim() || undefined })
-    log.info(`${ok ? 'ok' : 'NOT FOUND'} ${check.label}`)
+    log.info(`${ok ? '通过' : '未找到'} ${check.label}`)
   }
   return { ok: checks.every(check => check.ok), checks }
 }
@@ -175,7 +175,7 @@ export async function verifyInstalledSkillFiles({ ctx, config, hosts, skillIds, 
     const result = runCommand(bin, ['plugin', 'list', '--json'], { inherit: false })
     if (!result.ok) {
       checks.push({ label: `${host.label}: installed skill files`, ok: false, detail: 'plugin list failed' })
-      log?.info(`MISSING ${host.label}: plugin list failed`)
+      log?.info(`缺失 ${host.label}：插件列表读取失败`)
       continue
     }
     let root
@@ -194,7 +194,7 @@ export async function verifyInstalledSkillFiles({ ctx, config, hosts, skillIds, 
     }
     if (!root) {
       checks.push({ label: `${host.label}: installed skill files`, ok: false, detail: 'plugin not found in plugin list' })
-      log?.info(`MISSING ${host.label}: plugin not found in plugin list`)
+      log?.info(`缺失 ${host.label}：插件列表中没有该插件`)
       continue
     }
     const missing = missingSkillFiles(root, skillIds)
@@ -203,7 +203,7 @@ export async function verifyInstalledSkillFiles({ ctx, config, hosts, skillIds, 
       ok: missing.length === 0,
       detail: missing.length > 0 ? `missing ${missing.join(', ')}` : undefined,
     })
-    log?.info(`${missing.length === 0 ? 'ok' : 'MISSING'} ${host.label}: skill files${missing.length > 0 ? ` (missing ${missing.join(', ')})` : ''}`)
+    log?.info(`${missing.length === 0 ? '通过' : '缺失'} ${host.label}：技能文件${missing.length > 0 ? `（缺少 ${missing.join(', ')}）` : ''}`)
   }
   return { ok: checks.every(check => check.ok), checks }
 }

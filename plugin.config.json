@@ -9,17 +9,18 @@
       "code-review",
       "fuzz",
       "release-notes",
-      "documentation"
+      "documentation",
+      "deepseek-harness"
     ],
     "name": "ascend-dev-skills",
     "displayName": {
       "en": "Ascend dev skills",
       "zh": "昇腾开发技能包"
     },
-    "version": "0.1.0",
+    "version": "0.2.0",
     "description": {
-      "en": "A portable plugin that bundles Ascend/GitCode developer skills for Claude Code, Codex, Cursor, and other Agent Plugins hosts: scenario-driven fuzzing, GitCode CLI, GitCode PR review, release notes, Ascend interface auditing, and documentation UX review.",
-      "zh": "面向 Claude Code、Codex、Cursor 等 Agent 宿主的通用插件，打包昇腾/GitCode 开发常用技能：场景化 fuzz、GitCode CLI、PR 审查、Release Note、昇腾接口梳理与文档体验审查。"
+      "en": "A portable plugin that bundles Ascend/GitCode developer skills for Claude Code, Codex, Cursor, DeepSeek Harness, and other Agent Plugins hosts: scenario-driven fuzzing, GitCode CLI, GitCode PR review, release notes, Ascend interface auditing, and documentation UX review.",
+      "zh": "面向 Claude Code、Codex、Cursor、DeepSeek Harness 等 Agent 宿主的通用插件，打包昇腾/GitCode 开发常用技能：场景化 fuzz、GitCode CLI、PR 审查、Release Note、昇腾接口梳理与文档体验审查。"
     },
     "author": {
       "name": "kali20gakki",

@@ -1,9 +1,9 @@
 {
   "name": "ascend-dev-skills",
-  "version": "0.1.0",
-  "private": true,
+  "version": "0.2.0",
+  "private": false,
   "type": "module",
-  "description": "Cross-agent plugin bundling Ascend/GitCode skills for Claude Code, Codex, Cursor, and other Agent Plugins hosts.",
+  "description": "跨 agent 技能插件：为 Claude Code、Codex、Cursor、DeepSeek Harness 等打包昇腾/GitCode 开发技能（场景化 fuzz、GitCode CLI/PR 审查/Release Note、昇腾接口梳理、文档体验审查）。",
   "license": "MIT",
   "author": {
     "name": "kali20gakki",
@@ -14,12 +14,27 @@
     "type": "git",
     "url": "https://github.com/kali20gakki/ascend_dev_plugin.git"
   },
+  "bugs": {
+    "url": "https://github.com/kali20gakki/ascend_dev_plugin/issues"
+  },
   "engines": {
     "node": ">=20"
   },
   "bin": {
     "ascend-dev-skills": "./scripts/install.js"
   },
+  "files": [
+    "scripts",
+    "plugin.config.json",
+    "plugin.json",
+    ".claude-plugin",
+    "assets",
+    "docs",
+    "README.md",
+    "README.en.md",
+    "LICENSE",
+    "NOTICES.md"
+  ],
   "scripts": {
     "install:plugin": "node scripts/install.js",
     "sync": "node scripts/sync-manifests.js",
@@ -28,13 +43,19 @@
     "test": "node --test",
     "ci": "node scripts/ci.mjs",
     "add-skill": "node scripts/add-skill.js",
-    "add-component": "node scripts/add-component.js"
+    "add-component": "node scripts/add-component.js",
+    "prepublishOnly": "node scripts/ci.mjs"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   },
   "keywords": [
     "agent-plugins",
     "claude-code",
     "codex",
     "cursor",
+    "deepseek-harness",
     "ascend",
     "cann",
     "gitcode",

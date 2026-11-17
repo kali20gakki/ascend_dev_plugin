@@ -1,8 +1,8 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "ascend-dev-skills",
-  "version": "0.1.0",
-  "description": "A portable plugin that bundles Ascend/GitCode developer skills for Claude Code, Codex, Cursor, and other Agent Plugins hosts: scenario-driven fuzzing, GitCode CLI, GitCode PR review, release notes, Ascend interface auditing, and documentation UX review.",
+  "version": "0.2.0",
+  "description": "A portable plugin that bundles Ascend/GitCode developer skills for Claude Code, Codex, Cursor, DeepSeek Harness, and other Agent Plugins hosts: scenario-driven fuzzing, GitCode CLI, GitCode PR review, release notes, Ascend interface auditing, and documentation UX review.",
   "author": {
     "name": "kali20gakki",
     "url": "https://github.com/kali20gakki"
@@ -18,13 +18,14 @@
     "code-review",
     "fuzz",
     "release-notes",
-    "documentation"
+    "documentation",
+    "deepseek-harness"
   ],
   "extensions": {
     "com.openai": {
       "interface": {
         "displayName": "Ascend dev skills",
-        "shortDescription": "A portable plugin that bundles Ascend/GitCode developer skills for Claude Code, Codex, Cursor, and other Agent Plugins hosts: scenario-driven fuzzing, GitCode CLI, GitCode PR review, release notes, Ascend interface auditing, and documentation UX review.",
+        "shortDescription": "A portable plugin that bundles Ascend/GitCode developer skills for Claude Code, Codex, Cursor, DeepSeek Harness, and other Agent Plugins hosts: scenario-driven fuzzing, GitCode CLI, GitCode PR review, release notes, Ascend interface auditing, and documentation UX review.",
         "category": "Productivity",
         "composerIcon": "./assets/icon.svg",
         "logo": "./assets/icon.svg"

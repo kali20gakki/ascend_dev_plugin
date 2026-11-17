@@ -9,8 +9,8 @@
     {
       "name": "ascend-dev-skills",
       "source": ".",
-      "description": "A portable plugin that bundles Ascend/GitCode developer skills for Claude Code, Codex, Cursor, and other Agent Plugins hosts: scenario-driven fuzzing, GitCode CLI, GitCode PR review, release notes, Ascend interface auditing, and documentation UX review.",
-      "version": "0.1.0",
+      "description": "A portable plugin that bundles Ascend/GitCode developer skills for Claude Code, Codex, Cursor, DeepSeek Harness, and other Agent Plugins hosts: scenario-driven fuzzing, GitCode CLI, GitCode PR review, release notes, Ascend interface auditing, and documentation UX review.",
+      "version": "0.2.0",
       "tags": [
         "ascend",
         "cann",
@@ -19,7 +19,8 @@
         "code-review",
         "fuzz",
         "release-notes",
-        "documentation"
+        "documentation",
+        "deepseek-harness"
       ]
     }
   ]

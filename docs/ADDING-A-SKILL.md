@@ -1,41 +1,38 @@
-# Add a skill
+# 新增技能
 
-Skills are git submodules under `skills/`. A skill is valid when
-`skills/<id>/SKILL.md` exists and starts with Agent Skills frontmatter (`name`,
-`description`).
+技能以 submodule 形式放在 `skills/` 下。只要 `skills/<id>/SKILL.md` 存在且带 Agent Skills
+frontmatter（`name`、`description`），该技能就会被宿主发现。
 
-## One command
+## 一条命令
 
 ```bash
 npm run add-skill -- https://github.com/owner/repo.git --id my-skill
 ```
 
-The script:
+脚本会：
 
-1. derives or accepts a kebab-case id (`--id`), branch (`--branch`), titles
-   (`--title-en/--title-zh`), and descriptions (`--description-en/--description-zh`);
-2. runs `git submodule add -b <branch> <url> skills/<id>` (or updates an existing one);
-3. reads `skills/<id>/SKILL.md` frontmatter;
-4. appends or updates the `skills[]` entry in `plugin.config.json`;
-5. regenerates host manifests and runs the repository checks.
+1. 推导或接受 kebab-case id（`--id`）、分支（`--branch`）、标题
+   （`--title-en/--title-zh`）、描述（`--description-en/--description-zh`）；
+2. 执行 `git submodule add -b <branch> <url> skills/<id>`（已存在则更新）；
+3. 读取 `skills/<id>/SKILL.md` 的 frontmatter；
+4. 在 `plugin.config.json` 的 `skills[]` 中追加或更新条目；
+5. 重新生成宿主清单并运行仓库校验。
 
-It prints the skill's frontmatter name. Titles and descriptions default to the
-frontmatter description; edit `plugin.config.json` to polish the bilingual copy.
-Then review and commit:
+脚本会打印技能的 frontmatter 名称。标题和描述默认取 frontmatter 描述，建议之后编辑
+`plugin.config.json` 打磨中英文文案。检查后提交：
 
 ```bash
-git add .gitmodules plugin.config.json skills plugins 2>/dev/null || true
 git add .gitmodules plugin.config.json skills
 git commit -m "feat: add my-skill"
 ```
 
-## Manual steps
+## 手动步骤
 
 ```bash
 git submodule add -b main https://github.com/owner/repo.git skills/my-skill
 ```
 
-Add to `plugin.config.json`:
+在 `plugin.config.json` 中追加：
 
 ```json
 {
@@ -49,35 +46,32 @@ Add to `plugin.config.json`:
 }
 ```
 
-Then:
+然后：
 
 ```bash
-npm run sync     # regenerate plugin.json, .claude-plugin/*
+npm run sync
 npm run verify
 ```
 
-## Requirements and pitfalls
+## 约束与常见问题
 
-- The id must be kebab-case and equal the directory name: `skills/<id>`.
-- The frontmatter `name` may differ from the id; the validator warns when it does.
-- One submodule = one skill. A repository containing several skills needs one
-  submodule entry per skill directory, using a `:path` suffix in the submodule URL
-  (`git submodule add <url> skills/<id>` with the URL pointing at the repository).
-- Submodules are pinned by gitlink. To move a skill to a newer upstream commit:
+- id 必须是 kebab-case，且与目录名一致：`skills/<id>`。
+- frontmatter 的 `name` 可以与 id 不同；不同时校验器会给出 warning。
+- 一个 submodule 对应一个技能。若一个仓库里有多个技能目录，需要为每个技能各建一个
+  submodule 条目（URL 指向同一仓库，路径指向不同技能目录）。
+- submodule 由 gitlink 固定版本。升级上游：
 
   ```bash
   git submodule update --remote -- skills/my-skill
   git add skills/my-skill && git commit -m "chore: bump my-skill"
   ```
 
-- To remove a skill: `git submodule deinit -f skills/<id>`, delete the entry from
-  `plugin.config.json`, run `npm run sync`, then remove the staged gitlink and the
-  `.git/modules/skills/<id>` directory.
+- 删除技能：`git submodule deinit -f skills/<id>`，从 `plugin.config.json` 删除条目，
+  执行 `npm run sync`，再移除 gitlink 与 `.git/modules/skills/<id>`。
 
 ## CI
 
-`node scripts/verify.js --require-skills` fails when any configured skill is not
-checked out, so CI must clone with submodules:
+`node scripts/verify.js --require-skills` 会在任一配置技能未检出时失败，因此 CI 必须先：
 
 ```bash
 git submodule update --init --recursive
